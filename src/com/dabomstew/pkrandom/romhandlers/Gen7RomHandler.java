@@ -1107,7 +1107,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public Pokemon getAltFormeOfPokemon(Pokemon pk, int forme) {
         int pokeNum = absolutePokeNumByBaseForme.getOrDefault(pk.number,dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 && !pokes[pokeNum].actuallyCosmetic ? pokes[pokeNum] : pk;
+        return pokeNum != 0 ? !pokes[pokeNum].actuallyCosmetic ? pokes[pokeNum] : pokes[pokeNum].baseForme : pk;
     }
 
     @Override
@@ -2381,6 +2381,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean isEffectivenessUpdated() {
+        return false;
     }
 
     private void applyFastestText() {

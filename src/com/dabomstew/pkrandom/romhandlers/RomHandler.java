@@ -269,6 +269,12 @@ public interface RomHandler {
 
     void doubleBattleMode();
 
+    List<Move> getMoveSelectionPoolAtLevel(TrainerPokemon tp, boolean cyclicEvolutions);
+
+    void pickTrainerMovesets(Settings settings);
+
+    int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp);
+
     // =========
     // Move Data
     // =========
@@ -634,6 +640,8 @@ public interface RomHandler {
     void applyMiscTweaks(Settings settings);
 
     void applyMiscTweak(MiscTweak tweak);
+
+    boolean isEffectivenessUpdated();
 
     void renderPlacementHistory();
 

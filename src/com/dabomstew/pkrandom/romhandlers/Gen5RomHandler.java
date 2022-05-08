@@ -2459,6 +2459,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
+    @Override
+    public boolean isEffectivenessUpdated() {
+        return effectivenessUpdated;
+    }
+
     // Removes the free lucky egg you receive from Professor Juniper and replaces it with a gooey mulch.
     private void removeFreeLuckyEgg() {
         int scriptFileGifts = romEntry.getInt("LuckyEggScriptOffset");

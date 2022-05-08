@@ -312,6 +312,118 @@ public class Randomizer {
             log.println("Pokemon Movesets: Unchanged." + NEWLINE);
         }
 
+        // TMs
+
+        if (!(settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY)
+                && settings.getTmsMod() == Settings.TMsMod.RANDOM) {
+            romHandler.randomizeTMMoves(settings);
+            tmMovesChanged = true;
+        }
+
+        if (tmMovesChanged) {
+            checkValue = logTMMoves(log, checkValue);
+        } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+            log.println("TM Moves: Metronome Only." + NEWLINE);
+        } else {
+            log.println("TM Moves: Unchanged." + NEWLINE);
+        }
+
+        // TM/HM compatibility
+        // 1. Randomize TM/HM compatibility
+        // 2. Ensure levelup move sanity
+        // 3. Follow evolutions
+        // 4. Full HM compatibility
+        // 5. Copy to cosmetic forms
+
+        switch (settings.getTmsHmsCompatibilityMod()) {
+            case COMPLETELY_RANDOM:
+            case RANDOM_PREFER_TYPE:
+                romHandler.randomizeTMHMCompatibility(settings);
+                tmsHmsCompatChanged = true;
+                break;
+            case FULL:
+                romHandler.fullTMHMCompatibility();
+                tmsHmsCompatChanged = true;
+                break;
+            default:
+                break;
+        }
+
+        if (settings.isTmLevelUpMoveSanity()) {
+            romHandler.ensureTMCompatSanity();
+            if (settings.isTmsFollowEvolutions()) {
+                romHandler.ensureTMEvolutionSanity();
+            }
+            tmsHmsCompatChanged = true;
+        }
+
+        if (settings.isFullHMCompat()) {
+            romHandler.fullHMCompatibility();
+            tmsHmsCompatChanged = true;
+        }
+
+        // Copy TM/HM compatibility to cosmetic formes if it was changed at all, and log changes
+        if (tmsHmsCompatChanged) {
+            romHandler.copyTMCompatibilityToCosmeticFormes();
+            logTMHMCompatibility(log);
+        }
+
+        // Move Tutors
+        if (romHandler.hasMoveTutors()) {
+
+            List<Integer> oldMtMoves = romHandler.getMoveTutorMoves();
+
+            if (!(settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY)
+                    && settings.getMoveTutorMovesMod() == Settings.MoveTutorMovesMod.RANDOM) {
+
+                romHandler.randomizeMoveTutorMoves(settings);
+                moveTutorMovesChanged = true;
+            }
+
+            if (moveTutorMovesChanged) {
+                checkValue = logMoveTutorMoves(log, checkValue, oldMtMoves);
+            } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
+                log.println("Move Tutor Moves: Metronome Only." + NEWLINE);
+            } else {
+                log.println("Move Tutor Moves: Unchanged." + NEWLINE);
+            }
+
+            // Move Tutor Compatibility
+            // 1. Randomize MT compatibility
+            // 2. Ensure levelup move sanity
+            // 3. Follow evolutions
+            // 4. Copy to cosmetic forms
+
+            switch (settings.getMoveTutorsCompatibilityMod()) {
+                case COMPLETELY_RANDOM:
+                case RANDOM_PREFER_TYPE:
+                    romHandler.randomizeMoveTutorCompatibility(settings);
+                    tutorCompatChanged = true;
+                    break;
+                case FULL:
+                    romHandler.fullMoveTutorCompatibility();
+                    tutorCompatChanged = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (settings.isTutorLevelUpMoveSanity()) {
+                romHandler.ensureMoveTutorCompatSanity();
+                if (settings.isTutorFollowEvolutions()) {
+                    romHandler.ensureMoveTutorEvolutionSanity();
+                }
+                tutorCompatChanged = true;
+            }
+
+            // Copy move tutor compatibility to cosmetic formes if it was changed at all
+            if (tutorCompatChanged) {
+                romHandler.copyMoveTutorCompatibilityToCosmeticFormes();
+                logTutorCompatibility(log);
+            }
+
+        }
+
         // Trainer Pokemon
         // 1. Add extra Trainer Pokemon
         // 2. Set trainers to be double battles and add extra Pokemon if necessary
@@ -360,6 +472,8 @@ public class Randomizer {
             romHandler.forceFullyEvolvedTrainerPokes(settings);
             trainersChanged = true;
         }
+
+        romHandler.pickTrainerMovesets(settings);
 
         if (settings.isRandomizeHeldItemsForBossTrainerPokemon()
                 || settings.isRandomizeHeldItemsForImportantTrainerPokemon()
@@ -486,117 +600,6 @@ public class Randomizer {
             }
         }
 
-        // TMs
-
-        if (!(settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY)
-                && settings.getTmsMod() == Settings.TMsMod.RANDOM) {
-            romHandler.randomizeTMMoves(settings);
-            tmMovesChanged = true;
-        }
-
-        if (tmMovesChanged) {
-            checkValue = logTMMoves(log, checkValue);
-        } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-            log.println("TM Moves: Metronome Only." + NEWLINE);
-        } else {
-            log.println("TM Moves: Unchanged." + NEWLINE);
-        }
-
-        // TM/HM compatibility
-        // 1. Randomize TM/HM compatibility
-        // 2. Ensure levelup move sanity
-        // 3. Follow evolutions
-        // 4. Full HM compatibility
-        // 5. Copy to cosmetic forms
-
-        switch (settings.getTmsHmsCompatibilityMod()) {
-            case COMPLETELY_RANDOM:
-            case RANDOM_PREFER_TYPE:
-                romHandler.randomizeTMHMCompatibility(settings);
-                tmsHmsCompatChanged = true;
-                break;
-            case FULL:
-                romHandler.fullTMHMCompatibility();
-                tmsHmsCompatChanged = true;
-                break;
-            default:
-                break;
-        }
-
-        if (settings.isTmLevelUpMoveSanity()) {
-            romHandler.ensureTMCompatSanity();
-            if (settings.isTmsFollowEvolutions()) {
-                romHandler.ensureTMEvolutionSanity();
-            }
-            tmsHmsCompatChanged = true;
-        }
-
-        if (settings.isFullHMCompat()) {
-            romHandler.fullHMCompatibility();
-            tmsHmsCompatChanged = true;
-        }
-
-        // Copy TM/HM compatibility to cosmetic formes if it was changed at all, and log changes
-        if (tmsHmsCompatChanged) {
-            romHandler.copyTMCompatibilityToCosmeticFormes();
-            logTMHMCompatibility(log);
-        }
-
-        // Move Tutors
-        if (romHandler.hasMoveTutors()) {
-
-            List<Integer> oldMtMoves = romHandler.getMoveTutorMoves();
-
-            if (!(settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY)
-                    && settings.getMoveTutorMovesMod() == Settings.MoveTutorMovesMod.RANDOM) {
-
-                romHandler.randomizeMoveTutorMoves(settings);
-                moveTutorMovesChanged = true;
-            }
-
-            if (moveTutorMovesChanged) {
-                checkValue = logMoveTutorMoves(log, checkValue, oldMtMoves);
-            } else if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
-                log.println("Move Tutor Moves: Metronome Only." + NEWLINE);
-            } else {
-                log.println("Move Tutor Moves: Unchanged." + NEWLINE);
-            }
-
-            // Move Tutor Compatibility
-            // 1. Randomize MT compatibility
-            // 2. Ensure levelup move sanity
-            // 3. Follow evolutions
-            // 4. Copy to cosmetic forms
-
-            switch (settings.getMoveTutorsCompatibilityMod()) {
-                case COMPLETELY_RANDOM:
-                case RANDOM_PREFER_TYPE:
-                    romHandler.randomizeMoveTutorCompatibility(settings);
-                    tutorCompatChanged = true;
-                    break;
-                case FULL:
-                    romHandler.fullMoveTutorCompatibility();
-                    tutorCompatChanged = true;
-                    break;
-                default:
-                    break;
-            }
-
-            if (settings.isTutorLevelUpMoveSanity()) {
-                romHandler.ensureMoveTutorCompatSanity();
-                if (settings.isTutorFollowEvolutions()) {
-                    romHandler.ensureMoveTutorEvolutionSanity();
-                }
-                tutorCompatChanged = true;
-            }
-
-            // Copy move tutor compatibility to cosmetic formes if it was changed at all
-            if (tutorCompatChanged) {
-                romHandler.copyMoveTutorCompatibilityToCosmeticFormes();
-                logTutorCompatibility(log);
-            }
-
-        }
 
         // In-game trades
 

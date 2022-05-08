@@ -364,6 +364,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private ItemList allowedItems, nonBadItems;
     private int pickupItemsTableOffset;
     private long actualCRC32;
+    private boolean effectivenessUpdated;
 
     @Override
     public boolean detectRom(byte[] rom) {
@@ -4083,6 +4084,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
+    @Override
+    public boolean isEffectivenessUpdated() {
+        return effectivenessUpdated;
+    }
+
     private void randomizeCatchingTutorial() {
         if (romEntry.getValue("CatchingTutorialOpponentMonOffset") > 0) {
             int oppOffset = romEntry.getValue("CatchingTutorialOpponentMonOffset");
@@ -4198,6 +4204,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
         logBlankLine();
         writeTypeEffectivenessTable(typeEffectivenessTable);
+        effectivenessUpdated = true;
     }
 
     private List<TypeRelationship> readTypeEffectivenessTable() {
@@ -4299,6 +4306,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public boolean hasRivalFinalBattle() {
         return romEntry.romType == Gen3Constants.RomType_FRLG;
+    }
+
+    @Override
+    public int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp) {
+        return tp.pokemon.number;
     }
 
     @Override
