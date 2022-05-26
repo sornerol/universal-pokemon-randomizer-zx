@@ -68,11 +68,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         super(random, logStream);
     }
 
-    @Override
-    public int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp) {
-        return tp.pokemon.number;
-    }
-
     private static class RomEntry {
         private String name;
         private String romCode;

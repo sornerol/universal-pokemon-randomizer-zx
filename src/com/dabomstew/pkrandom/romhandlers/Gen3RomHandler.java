@@ -4309,11 +4309,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp) {
-        return tp.pokemon.number;
-    }
-
-    @Override
     public List<Integer> getAllConsumableHeldItems() {
         return Gen3Constants.consumableHeldItems;
     }

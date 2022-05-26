@@ -1637,9 +1637,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     tpk.pokemon = pokes[species];
                     tpk.forme = formnum;
                     tpk.formeSuffix = Gen7Constants.getFormeSuffixByBaseForme(species,formnum);
-                    tpk.absolutePokeNumber = absolutePokeNumByBaseForme
-                            .getOrDefault(species,dummyAbsolutePokeNums)
-                            .getOrDefault(formnum,species);
                     pokeOffs += 20;
                     tpk.heldItem = readWord(trpoke, pokeOffs);
                     tpk.hasMegaStone = Gen6Constants.isMegaStone(tpk.heldItem);
@@ -1727,7 +1724,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     writeWord(trpoke, pokeOffs, tp.heldItem);
                     pokeOffs += 4;
                     if (tp.resetMoves) {
-                        int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.absolutePokeNumber, movesets, tp.level);
+                        int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.pokemon, tp.forme).number, movesets, tp.level);
                         for (int m = 0; m < 4; m++) {
                             writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                         }

@@ -273,8 +273,6 @@ public interface RomHandler {
 
     void pickTrainerMovesets(Settings settings);
 
-    int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp);
-
     // =========
     // Move Data
     // =========

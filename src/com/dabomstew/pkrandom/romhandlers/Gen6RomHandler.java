@@ -1920,9 +1920,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     tpk.forcedGenderFlag = (abilityAndFlag & 0xF);
                     tpk.forme = formnum;
                     tpk.formeSuffix = Gen6Constants.getFormeSuffixByBaseForme(species,formnum);
-                    tpk.absolutePokeNumber = absolutePokeNumByBaseForme
-                            .getOrDefault(species,dummyAbsolutePokeNums)
-                            .getOrDefault(formnum,species);
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
                         tpk.heldItem = readWord(trpoke, pokeOffs);
@@ -2026,7 +2023,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.absolutePokeNumber, movesets, tp.level);
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.pokemon, tp.forme).number, movesets, tp.level);
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }

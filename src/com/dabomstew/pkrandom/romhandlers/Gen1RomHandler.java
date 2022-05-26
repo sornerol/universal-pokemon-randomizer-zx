@@ -1400,11 +1400,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp) {
-        return tp.pokemon.number;
-    }
-
-    @Override
     public boolean isYellow() {
         return romEntry.isYellow;
     }

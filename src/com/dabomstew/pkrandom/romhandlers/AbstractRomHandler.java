@@ -1854,7 +1854,6 @@ public abstract class AbstractRomHandler implements RomHandler {
                 if (distributionSetting || (mainPlaythroughSetting && mainPlaythroughTrainers.contains(t.offset))) {
                     setPlacementHistory(newPK);
                 }
-                tp.absolutePokeNumber = newPK.number;
                 tp.pokemon = newPK;
                 setFormeForTrainerPokemon(tp, newPK);
                 tp.abilitySlot = getRandomAbilitySlot(newPK);
@@ -2001,7 +2000,6 @@ public abstract class AbstractRomHandler implements RomHandler {
                     Pokemon newPokemon = fullyEvolve(tp.pokemon);
                     if (newPokemon != tp.pokemon) {
                         tp.pokemon = newPokemon;
-                        tp.absolutePokeNumber = newPokemon.number;
                         setFormeForTrainerPokemon(tp, newPokemon);
                         tp.abilitySlot = getValidAbilitySlotFromOriginal(newPokemon, tp.abilitySlot);
                         tp.resetMoves = true;
@@ -2134,7 +2132,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
 
         // Level-up Moves
-        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(getAbsolutePokeNumOfTrainerPokemon(tp))
+        List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(getAltFormeOfPokemon(tp.pokemon, tp.forme).number)
                 .stream()
                 .filter(ml -> ml.level <= tp.level)
                 .map(ml -> moves.get(ml.move))
@@ -2745,11 +2743,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
 
         return obsoletedMoves.stream().distinct().collect(Collectors.toList());
-    }
-
-    @Override
-    public int getAbsolutePokeNumOfTrainerPokemon(TrainerPokemon tp) {
-        return tp.absolutePokeNumber;
     }
 
     private boolean trainerShouldNotGetBuffs(Trainer t) {
@@ -6586,7 +6579,6 @@ public abstract class AbstractRomHandler implements RomHandler {
                     }
                 }
                 bestPoke.pokemon = starter;
-                bestPoke.absolutePokeNumber = starter.number;
                 setFormeForTrainerPokemon(bestPoke,starter);
                 bestPoke.resetMoves = true;
                 bestPoke.abilitySlot = abilitySlot;
