@@ -389,6 +389,7 @@ public class MoveSynergy {
                 synergisticMoves.add(Moves.transform);
                 synergisticMoves.add(Moves.protect);
                 synergisticMoves.add(Moves.detect);
+                synergisticMoves.add(Moves.kingsShield);
                 synergisticMoves.add(Moves.banefulBunker);
                 synergisticMoves.add(Moves.fly);
                 synergisticMoves.add(Moves.dig);
@@ -528,9 +529,6 @@ public class MoveSynergy {
                                 (mv.statusType == StatusType.POISON || mv.statusType == StatusType.TOXIC_POISON))
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
-                break;
-            case Abilities.grassySurge:
-                synergisticMoves.add(Moves.floralHealing);
                 break;
         }
 
@@ -762,6 +760,7 @@ public class MoveSynergy {
             case Moves.toxic:       // fallthrough
                 synergisticMoves.add(Moves.protect);
                 synergisticMoves.add(Moves.detect);
+                synergisticMoves.add(Moves.kingsShield);
                 synergisticMoves.add(Moves.dig);
                 synergisticMoves.add(Moves.fly);
                 synergisticMoves.add(Moves.bounce);
@@ -780,6 +779,7 @@ public class MoveSynergy {
                 break;
             case Moves.protect:
             case Moves.detect:
+            case Moves.kingsShield:
                 synergisticMoves.add(Moves.toxic);
                 synergisticMoves.add(Moves.leechSeed);
                 synergisticMoves.add(Moves.willOWisp);
@@ -986,14 +986,22 @@ public class MoveSynergy {
             case Moves.protect:
                 antiSynergisticMoves.add(Moves.detect);
                 antiSynergisticMoves.add(Moves.banefulBunker);
+                antiSynergisticMoves.add(Moves.kingsShield);
                 break;
             case Moves.detect:
                 antiSynergisticMoves.add(Moves.protect);
+                antiSynergisticMoves.add(Moves.banefulBunker);
+                antiSynergisticMoves.add(Moves.kingsShield);
+                break;
+            case Moves.kingsShield:
+                antiSynergisticMoves.add(Moves.protect);
+                antiSynergisticMoves.add(Moves.detect);
                 antiSynergisticMoves.add(Moves.banefulBunker);
                 break;
             case Moves.banefulBunker:
                 antiSynergisticMoves.add(Moves.protect);
                 antiSynergisticMoves.add(Moves.detect);
+                antiSynergisticMoves.add(Moves.kingsShield);
                 break;
         }
 
