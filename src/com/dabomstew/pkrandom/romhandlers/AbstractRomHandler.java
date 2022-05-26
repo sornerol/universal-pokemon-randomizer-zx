@@ -2224,7 +2224,11 @@ public abstract class AbstractRomHandler implements RomHandler {
         List<Trainer> trainers = getTrainers();
 
         for (Trainer t: trainers) {
+            t.setPokemonHaveCustomMoves(true);
+
             for (TrainerPokemon tp: t.pokemon) {
+                tp.resetMoves = false;
+
                 System.out.println(tp.toString() + ", Ability: " + abilityName(getAbilityForTrainerPokemon(tp)));
 
                 List<Move> movesAtLevel = getMoveSelectionPoolAtLevel(tp, isCyclicEvolutions);
@@ -2339,21 +2343,21 @@ public abstract class AbstractRomHandler implements RomHandler {
 
                 List<Move> statSynergyList = MoveSynergy.getStatMoveSynergy(pk, movesAtLevel);
                 Collections.shuffle(statSynergyList, this.random);
-                System.out.println("Stat Synergy:");
+                //System.out.println("Stat Synergy:");
                 for (int i = 0; i < statBias * statSynergyList.size(); i++) {
                     int j = i % statSynergyList.size();
                     movesAtLevel.add(statSynergyList.get(j));
-                    System.out.println(statSynergyList.get(j).name);
+                    //System.out.println(statSynergyList.get(j).name);
                 }
 
                 // Stat/move anti-synergy
 
                 List<Move> statAntiSynergyList = MoveSynergy.getStatMoveAntiSynergy(pk, movesAtLevel);
                 List<Move> withoutStatAntiSynergy = new ArrayList<>(movesAtLevel);
-                System.out.println("Soft Stat Anti-Synergy:");
+                //System.out.println("Soft Stat Anti-Synergy:");
                 for (Move mv: statAntiSynergyList) {
                     withoutStatAntiSynergy.remove(mv);
-                    System.out.println(mv.name);
+                    //System.out.println(mv.name);
                 }
                 if (withoutStatAntiSynergy.size() > 0) {
                     movesAtLevel = withoutStatAntiSynergy;
@@ -2407,7 +2411,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                     atkSpatkRatio = 1 / atkSpatkRatio;
                     double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
                     int additionalMoves = (int)(physicalMoves.size() * acceptedRatio) - specialMoves.size();
-                    System.out.println("Adjusting Atk/Spatk Ratio by Adding " + additionalMoves + " Special Moves");
+                    //System.out.println("Adjusting Atk/Spatk Ratio by Adding " + additionalMoves + " Special Moves");
                     for (int i = 0; i < additionalMoves; i++) {
                         Move mv = specialMoves.get(this.random.nextInt(specialMoves.size()));
                         movesAtLevel.add(mv);
@@ -2415,7 +2419,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                 } else if (physicalMoves.size() > 0) {
                     double acceptedRatio = atkSpatkRatioModifier * atkSpatkRatio;
                     int additionalMoves = (int)(specialMoves.size() * acceptedRatio) - physicalMoves.size();
-                    System.out.println("Adjusting Atk/Spatk Ratio by Adding " + additionalMoves + " Physical Moves");
+                    //System.out.println("Adjusting Atk/Spatk Ratio by Adding " + additionalMoves + " Physical Moves");
                     for (int i = 0; i < additionalMoves; i++) {
                         Move mv = physicalMoves.get(this.random.nextInt(physicalMoves.size()));
                         movesAtLevel.add(mv);
@@ -2531,6 +2535,7 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
             }
         }
+        setTrainers(trainers, false);
     }
 
     private List<Move> trimMoveList(TrainerPokemon tp, List<Move> movesAtLevel, boolean doubleBattleMode) {
