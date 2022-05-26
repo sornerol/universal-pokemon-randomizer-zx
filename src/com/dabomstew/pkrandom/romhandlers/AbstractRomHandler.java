@@ -2620,12 +2620,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         withoutHardAntiSynergy.removeAll(MoveSynergy.getHardAbilityMoveAntiSynergy(
                 getAbilityForTrainerPokemon(tp),
                 movesAtLevel));
-        System.out.println("Ability Hard Anti-Synergy:");
-        for (Move mv: MoveSynergy.getHardAbilityMoveAntiSynergy(
-                getAbilityForTrainerPokemon(tp),
-                movesAtLevel)) {
-            System.out.println(mv.name);
-        }
 
         if (withoutHardAntiSynergy.size() > 0) {
             movesAtLevel = withoutHardAntiSynergy;

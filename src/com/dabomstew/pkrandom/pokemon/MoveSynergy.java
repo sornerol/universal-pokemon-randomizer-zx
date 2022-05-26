@@ -626,6 +626,7 @@ public class MoveSynergy {
                                 mv.statChanges[0].stages > 0)
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
+                antiSynergisticMoves.add(Moves.shellSmash);
                 break;
             case Abilities.lightMetal:
                 antiSynergisticMoves.add(Moves.heatCrash);
@@ -909,8 +910,17 @@ public class MoveSynergy {
                         .map(mv -> mv.number)
                         .collect(Collectors.toList()));
                 synergisticMoves.add(Moves.acupressure);
+                synergisticMoves.add(Moves.shellSmash);
                 break;
-
+            case Moves.swagger:
+                synergisticMoves.add(Moves.punishment);
+                break;
+            case Moves.punishment:
+                synergisticMoves.add(Moves.swagger);
+                break;
+            case Moves.shellSmash:
+                synergisticMoves.add(Moves.storedPower);
+                break;
         }
 
         return moveList
