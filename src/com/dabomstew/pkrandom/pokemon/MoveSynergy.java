@@ -1013,6 +1013,12 @@ public class MoveSynergy {
                 antiSynergisticMoves.add(Moves.detect);
                 antiSynergisticMoves.add(Moves.kingsShield);
                 break;
+            case Moves.returnTheMoveNotTheKeyword:
+                antiSynergisticMoves.add(Moves.frustration);
+                break;
+            case Moves.frustration:
+                antiSynergisticMoves.add(Moves.returnTheMoveNotTheKeyword);
+                break;
         }
 
         return moveList
