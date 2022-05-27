@@ -201,6 +201,9 @@ public class MoveSynergy {
             case Abilities.primordialSea:
                 synergisticMoves.add(Moves.thunder);
                 synergisticMoves.add(Moves.hurricane);
+                if (pkType1 == Type.WATER || pkType2 == Type.WATER) {
+                    synergisticMoves.add(Moves.weatherBall);
+                }
                 break;
             case Abilities.speedBoost:
                 synergisticMoves.add(Moves.batonPass);
@@ -262,6 +265,11 @@ public class MoveSynergy {
             case Abilities.soundproof:
                 synergisticMoves.add(Moves.perishSong);
                 break;
+            case Abilities.sandStream:
+                if (pkType1 == Type.ROCK || pkType2 == Type.ROCK) {
+                    synergisticMoves.add(Moves.weatherBall);
+                }
+                break;
             case Abilities.earlyBird:
             case Abilities.shedSkin:
                 synergisticMoves.add(Moves.rest);
@@ -302,6 +310,9 @@ public class MoveSynergy {
                 synergisticMoves.add(Moves.moonlight);
                 if (generation >= 5) {
                     synergisticMoves.add(Moves.growth);
+                }
+                if (pkType1 == Type.FIRE || pkType2 == Type.FIRE) {
+                    synergisticMoves.add(Moves.weatherBall);
                 }
                 break;
             case Abilities.ironFist:
@@ -399,6 +410,9 @@ public class MoveSynergy {
             case Abilities.snowWarning:
                 synergisticMoves.add(Moves.auroraVeil);
                 synergisticMoves.add(Moves.blizzard);
+                if (pkType1 == Type.ICE || pkType2 == Type.ICE) {
+                    synergisticMoves.add(Moves.weatherBall);
+                }
                 break;
             case Abilities.reckless:
                 synergisticMoves.addAll(moveList
@@ -1021,6 +1035,19 @@ public class MoveSynergy {
                 break;
         }
 
+        switch (mv1.type) {
+            case FIRE:
+                if (mv1.category != MoveCategory.STATUS) {
+                    antiSynergisticMoves.add(Moves.waterSport);
+                }
+                break;
+            case ELECTRIC:
+                if (mv1.category != MoveCategory.STATUS) {
+                    antiSynergisticMoves.add(Moves.mudSport);
+                }
+                break;
+        }
+
         return moveList
                 .stream()
                 .filter(mv -> antiSynergisticMoves.contains(mv.number))
@@ -1038,6 +1065,23 @@ public class MoveSynergy {
                     .filter(mv -> (mv.category != MoveCategory.STATUS && mv.type == mv1.type))
                     .map(mv -> mv.number)
                     .collect(Collectors.toList()));
+        }
+
+        switch (mv1.number) {
+            case Moves.waterSport:
+                antiSynergisticMoves.addAll(moveList
+                        .stream()
+                        .filter(mv -> (mv.category != MoveCategory.STATUS && mv.type == Type.FIRE))
+                        .map(mv -> mv.number)
+                        .collect(Collectors.toList()));
+                break;
+            case Moves.mudSport:
+                antiSynergisticMoves.addAll(moveList
+                        .stream()
+                        .filter(mv -> (mv.category != MoveCategory.STATUS && mv.type == Type.ELECTRIC))
+                        .map(mv -> mv.number)
+                        .collect(Collectors.toList()));
+                break;
         }
 
         return moveList
