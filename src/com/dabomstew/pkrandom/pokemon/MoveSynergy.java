@@ -771,6 +771,36 @@ public class MoveSynergy {
     public static List<Move> getMoveSynergy(Move mv1, List<Move> moveList, int generation) {
         List<Integer> synergisticMoves = new ArrayList<>();
 
+        if ((mv1.statChangeMoveType == StatChangeMoveType.DAMAGE_TARGET &&
+                mv1.statChanges[0].type == StatChangeType.SPEED && mv1.statChanges[0].stages < 0) ||
+                ((mv1.statChangeMoveType == StatChangeMoveType.DAMAGE_USER ||
+                        mv1.statChangeMoveType == StatChangeMoveType.NO_DAMAGE_USER) &&
+                        mv1.statChanges[0].type == StatChangeType.SPEED && mv1.statChanges[0].stages > 0)) {
+            synergisticMoves.addAll(moveList
+                    .stream()
+                    .filter(mv -> mv.flinchPercentChance > 0 && mv.priority == 0)
+                    .map(mv -> mv.number)
+                    .collect(Collectors.toList()));
+        }
+
+        if (mv1.flinchPercentChance > 0 && mv1.priority == 0) {
+            synergisticMoves.addAll(moveList
+                    .stream()
+                    .filter(mv -> (mv.statChangeMoveType == StatChangeMoveType.DAMAGE_TARGET &&
+                            mv.statChanges[0].type == StatChangeType.SPEED && mv.statChanges[0].stages < 0) ||
+                            ((mv.statChangeMoveType == StatChangeMoveType.DAMAGE_USER ||
+                                    mv.statChangeMoveType == StatChangeMoveType.NO_DAMAGE_USER) &&
+                                    mv.statChanges[0].type == StatChangeType.SPEED && mv.statChanges[0].stages > 0))
+                    .map(mv -> mv.number)
+                    .collect(Collectors.toList()));
+        }
+
+        if (mv1.statChanges[0].stages >= 2 || mv1.statChanges[1].type != StatChangeType.NONE) {
+            synergisticMoves.add(Moves.batonPass);
+            synergisticMoves.add(Moves.storedPower);
+            synergisticMoves.add(Moves.powerTrip);
+        }
+
         switch(mv1.number) {
             case Moves.toxic:       // fallthrough
                 synergisticMoves.add(Moves.protect);
@@ -792,12 +822,28 @@ public class MoveSynergy {
                 synergisticMoves.add(Moves.venoshock);
                 synergisticMoves.add(Moves.hex);
                 break;
+            case Moves.venoshock:
+                synergisticMoves.addAll(moveList
+                        .stream()
+                        .filter(mv -> mv.category == MoveCategory.STATUS &&
+                                (mv.statusType == StatusType.POISON || mv.statusType == StatusType.TOXIC_POISON))
+                        .map(mv -> mv.number)
+                        .collect(Collectors.toList()));
+                break;
             case Moves.protect:
             case Moves.detect:
             case Moves.kingsShield:
                 synergisticMoves.add(Moves.toxic);
                 synergisticMoves.add(Moves.leechSeed);
                 synergisticMoves.add(Moves.willOWisp);
+                break;
+            case Moves.batonPass:
+                synergisticMoves.addAll(moveList
+                        .stream()
+                        .filter(mv -> mv.statChanges[0].stages >= 2 || mv.statChanges[1].type != StatChangeType.NONE)
+                        .map(mv -> mv.number)
+                        .collect(Collectors.toList()));
+                synergisticMoves.add(Moves.shellSmash);
                 break;
             case Moves.willOWisp:
                 synergisticMoves.add(Moves.hex);
