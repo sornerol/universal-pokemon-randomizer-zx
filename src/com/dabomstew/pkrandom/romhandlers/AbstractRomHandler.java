@@ -2134,7 +2134,7 @@ public abstract class AbstractRomHandler implements RomHandler {
         // Level-up Moves
         List<Move> moveSelectionPoolAtLevel = allLevelUpMoves.get(getAltFormeOfPokemon(tp.pokemon, tp.forme).number)
                 .stream()
-                .filter(ml -> ml.level <= tp.level)
+                .filter(ml -> (ml.level <= tp.level && ml.level != 0) || (ml.level == 0 && tp.level >= 30))
                 .map(ml -> moves.get(ml.move))
                 .distinct()
                 .collect(Collectors.toList());
