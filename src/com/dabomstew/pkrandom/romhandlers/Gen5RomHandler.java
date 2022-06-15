@@ -495,7 +495,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         loadedWildMapNames = false;
 
         allowedItems = Gen5Constants.allowedItems.copy();
-        nonBadItems = Gen5Constants.nonBadItems.copy();
+        nonBadItems = Gen5Constants.getNonBadItems(romEntry.romType).copy();
         regularShopItems = Gen5Constants.regularShopItems;
         opShopItems = Gen5Constants.opShopItems;
 
@@ -1403,7 +1403,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 byte[] trpoke = trpokes.files.get(i);
                 Trainer tr = new Trainer();
                 tr.poketype = trainer[0] & 0xFF;
-                tr.offset = i;
+                tr.index = i;
                 tr.trainerclass = trainer[1] & 0xFF;
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
@@ -1440,7 +1440,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     tpk.forcedGenderFlag = (abilityAndFlag & 0xF);
                     tpk.forme = formnum;
                     tpk.formeSuffix = Gen5Constants.getFormeSuffixByBaseForme(species,formnum);
-                    tpk.absolutePokeNumber = Gen5Constants.getAbsolutePokeNumByBaseForme(species,formnum);
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
                         tpk.heldItem = readWord(trpoke, pokeOffs);
@@ -1466,7 +1465,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     for (int trno = 0; trno < 17; trno++) {
                         Trainer tr = new Trainer();
                         tr.poketype = 3; // have held items and custom moves
-                        tr.offset = 0;
+                        int nameAndClassIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(trno);
+                        tr.fullDisplayName = tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex);
+                        tr.requiresUniqueHeldItems = true;
                         int pokemonNum = 6;
                         if (trno < 2) {
                             pokemonNum = 3;
@@ -1482,7 +1483,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             for (int move = 0; move < 4; move++) {
                                 tpk.moves[move] = readWord(pkmndata, 2 + (move*2));
                             }
-                            tpk.absolutePokeNumber = Gen5Constants.getAbsolutePokeNumByBaseForme(species,0);
                             tr.pokemon.add(tpk);
                             currentFile++;
                         }
@@ -1583,7 +1583,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.absolutePokeNumber, movesets, tp.level);
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(getAltFormeOfPokemon(tp.pokemon, tp.forme).number, movesets, tp.level);
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -1703,7 +1703,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         writeWord(pkmndata, 12, tp.heldItem);
                         // handle moves
                         if (tp.resetMoves) {
-                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.absolutePokeNumber, movesets, tp.level);
+                            int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.pokemon.number, movesets, tp.level);
                             for (int m = 0; m < 4; m++) {
                                 writeWord(pkmndata, 2 + m * 2, pokeMoves[m]);
                             }
@@ -2435,16 +2435,16 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             removeFreeLuckyEgg();
         } else if (tweak == MiscTweak.BAN_BIG_MANIAC_ITEMS) {
             // BalmMushroom, Big Nugget, Pearl String, Comet Shard
-            allowedItems.banRange(0x244, 4);
-            nonBadItems.banRange(0x244, 4);
+            allowedItems.banRange(Items.balmMushroom, 4);
+            nonBadItems.banRange(Items.balmMushroom, 4);
 
             // Relics
-            allowedItems.banRange(0x24B, 4);
-            nonBadItems.banRange(0x24B, 4);
+            allowedItems.banRange(Items.relicVase, 4);
+            nonBadItems.banRange(Items.relicVase, 4);
 
             // Rare berries
-            allowedItems.banRange(0xCE, 7);
-            nonBadItems.banRange(0xCE, 7);
+            allowedItems.banRange(Items.lansatBerry, 7);
+            nonBadItems.banRange(Items.lansatBerry, 7);
         } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
             byte[] fossilFile = scriptNarc.files.get(Gen5Constants.fossilPokemonFile);
             writeWord(fossilFile,Gen5Constants.fossilPokemonLevelOffset,20);
@@ -2457,6 +2457,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         } else if (tweak == MiscTweak.FORCE_CHALLENGE_MODE) {
             forceChallengeMode();
         }
+    }
+
+    @Override
+    public boolean isEffectivenessUpdated() {
+        return effectivenessUpdated;
     }
 
     // Removes the free lucky egg you receive from Professor Juniper and replaces it with a gooey mulch.
@@ -3280,6 +3285,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     public List<String> getTrainerNames() {
         List<String> tnames = getStrings(false, romEntry.getInt("TrainerNamesTextOffset"));
         tnames.remove(0); // blank one
+        if (romEntry.romType == Gen5Constants.Type_BW2) {
+            List<String> pwtNames = getStrings(false, romEntry.getInt("PWTTrainerNamesTextOffset"));
+            tnames.addAll(pwtNames);
+        }
         // Tack the mugshot names on the end
         List<String> mnames = getStrings(false, romEntry.getInt("TrainerMugshotsTextOffset"));
         for (String mname : mnames) {
@@ -3314,10 +3323,25 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         setStrings(false, romEntry.getInt("TrainerMugshotsTextOffset"), mnames);
 
         // Now save the rest of trainer names
-        List<String> newTNames = new ArrayList<>(trainerNames);
-        newTNames.add(0, tnames.get(0)); // the 0-entry, preserve it
-        setStrings(false, romEntry.getInt("TrainerNamesTextOffset"), newTNames);
-
+        if (romEntry.romType == Gen5Constants.Type_BW2) {
+            List<String> pwtNames = getStrings(false, romEntry.getInt("PWTTrainerNamesTextOffset"));
+            List<String> newTNames = new ArrayList<>();
+            List<String> newPWTNames = new ArrayList<>();
+            newTNames.add(0, tnames.get(0)); // the 0-entry, preserve it
+            for (int i = 1; i < tnames.size() + pwtNames.size(); i++) {
+                if (i < tnames.size()) {
+                    newTNames.add(trainerNames.get(i - 1));
+                } else {
+                    newPWTNames.add(trainerNames.get(i - 1));
+                }
+            }
+            setStrings(false, romEntry.getInt("TrainerNamesTextOffset"), newTNames);
+            setStrings(false, romEntry.getInt("PWTTrainerNamesTextOffset"), newPWTNames);
+        } else {
+            List<String> newTNames = new ArrayList<>(trainerNames);
+            newTNames.add(0, tnames.get(0)); // the 0-entry, preserve it
+            setStrings(false, romEntry.getInt("TrainerNamesTextOffset"), newTNames);
+        }
     }
 
     @Override
@@ -3333,12 +3357,32 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public List<String> getTrainerClassNames() {
-        return getStrings(false, romEntry.getInt("TrainerClassesTextOffset"));
+        List<String> classNames = getStrings(false, romEntry.getInt("TrainerClassesTextOffset"));
+        if (romEntry.romType == Gen5Constants.Type_BW2) {
+            classNames.addAll(getStrings(false, romEntry.getInt("PWTTrainerClassesTextOffset")));
+        }
+        return classNames;
     }
 
     @Override
     public void setTrainerClassNames(List<String> trainerClassNames) {
-        setStrings(false, romEntry.getInt("TrainerClassesTextOffset"), trainerClassNames);
+        if (romEntry.romType == Gen5Constants.Type_BW2) {
+            List<String> newTClasses = new ArrayList<>();
+            List<String> newPWTClasses = new ArrayList<>();
+            List<String> classNames = getStrings(false, romEntry.getInt("TrainerClassesTextOffset"));
+            List<String> pwtClassNames = getStrings(false, romEntry.getInt("PWTTrainerClassesTextOffset"));
+            for (int i = 0; i < classNames.size() + pwtClassNames.size(); i++) {
+                if (i < classNames.size()) {
+                    newTClasses.add(trainerClassNames.get(i));
+                } else {
+                    newPWTClasses.add(trainerClassNames.get(i));
+                }
+            }
+            setStrings(false, romEntry.getInt("TrainerClassesTextOffset"), newTClasses);
+            setStrings(false, romEntry.getInt("PWTTrainerClassesTextOffset"), newPWTClasses);
+        } else {
+            setStrings(false, romEntry.getInt("TrainerClassesTextOffset"), trainerClassNames);
+        }
     }
 
     @Override
@@ -4197,7 +4241,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, Map<Integer, List<MoveLearnt>> movesets) {
+    public List<Integer> getSensibleHeldItemsFor(TrainerPokemon tp, boolean consumableOnly, List<Move> moves, int[] pokeMoves) {
         List<Integer> items = new ArrayList<>();
         items.addAll(Gen5Constants.generalPurposeConsumableItems);
         int frequencyBoostCount = 6; // Make some very good items more common, but not too common
@@ -4205,7 +4249,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             frequencyBoostCount = 8; // bigger to account for larger item pool.
             items.addAll(Gen5Constants.generalPurposeItems);
         }
-        int[] pokeMoves = RomFunctions.getMovesAtLevel(tp.pokemon.number, movesets, tp.level);
         for (int moveIdx : pokeMoves) {
             Move move = moves.get(moveIdx);
             if (move == null) {
