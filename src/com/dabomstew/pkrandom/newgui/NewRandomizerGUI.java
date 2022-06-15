@@ -847,19 +847,27 @@ public class NewRandomizerGUI {
         }
 
         if (allowed && fh != null) {
-            // Get a seed
-            long seed = RandomSource.pickSeed();
-            // Apply it
-            RandomSource.seed(seed);
-            presetMode = false;
+            boolean batchRandomizationMode = batchGenerationCheckBox.isSelected();
+            int requestedRandomizations = batchRandomizationMode ? (int) batchQuantitySpinner.getValue() : 1;
 
-            try {
-                CustomNamesSet cns = FileFunctions.getCustomNames();
-                performRandomization(fh.getAbsolutePath(), seed, cns, outputType == SaveType.DIRECTORY);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
+            for (int randomizationsCompleted = 0; randomizationsCompleted < requestedRandomizations; randomizationsCompleted++) {
+                // Get a seed
+                long seed = RandomSource.pickSeed();
+                // Apply it
+                RandomSource.seed(seed);
+                presetMode = false;
+
+                try {
+                    CustomNamesSet cns = FileFunctions.getCustomNames();
+                    String fileName = fh.getAbsolutePath();
+                    if (batchRandomizationMode) {
+                        fileName += "." + randomizationsCompleted;
+                    }
+                    performRandomization(fileName, seed, cns, outputType == SaveType.DIRECTORY, batchRandomizationMode);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
+                }
             }
-
         }
     }
 
@@ -928,7 +936,11 @@ public class NewRandomizerGUI {
         }
     }
 
-    private void performRandomization(final String filename, final long seed, CustomNamesSet customNames, boolean saveAsDirectory) {
+    private void performRandomization(final String filename,
+                                      final long seed,
+                                      CustomNamesSet customNames,
+                                      boolean saveAsDirectory,
+                                      boolean batchMode) {
         final Settings settings = createSettingsFromState(customNames);
         final boolean raceMode = settings.isRaceMode();
         // Setup verbose log
@@ -946,7 +958,9 @@ public class NewRandomizerGUI {
             final AtomicInteger finishedCV = new AtomicInteger(0);
             opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
             Thread t = new Thread(() -> {
-                SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+                if (!batchMode) {
+                    SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+                }
                 boolean succeededSave = false;
                 try {
                     romHandler.setLog(verboseLog);
@@ -967,7 +981,9 @@ public class NewRandomizerGUI {
                 }
                 if (succeededSave) {
                     SwingUtilities.invokeLater(() -> {
-                        opDialog.setVisible(false);
+                        if (!batchMode) {
+                            opDialog.setVisible(false);
+                        }
                         // Log?
                         verboseLog.close();
                         byte[] out = baos.toByteArray();
@@ -976,7 +992,7 @@ public class NewRandomizerGUI {
                             JOptionPane.showMessageDialog(frame,
                                     String.format(bundle.getString("GUI.raceModeCheckValuePopup"),
                                             finishedCV.get()));
-                        } else {
+                        } else if (!batchMode) {
                             int response = JOptionPane.showConfirmDialog(frame,
                                     bundle.getString("GUI.saveLogDialog.text"),
                                     bundle.getString("GUI.saveLogDialog.title"),
@@ -1008,7 +1024,7 @@ public class NewRandomizerGUI {
                             } else {
                                 reinitializeRomHandler();
                             }
-                        } else {
+                        } else if (!batchMode) {
                             // Compile a config string
                             try {
                                 String configString = getCurrentSettings().toString();
@@ -1037,6 +1053,9 @@ public class NewRandomizerGUI {
                 }
             });
             t.start();
+            if (batchMode) {
+                t.join();
+            }
         } catch (Exception ex) {
             attemptToLogException(ex, "GUI.saveFailed", "GUI.saveFailedNoLog", settings.toString(), Long.toString(seed));
             if (verboseLog != null) {
@@ -1108,16 +1127,11 @@ public class NewRandomizerGUI {
                 // Apply the seed we were given
                 RandomSource.seed(seed);
                 presetMode = true;
-                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), outputType == SaveType.DIRECTORY);
+                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), outputType == SaveType.DIRECTORY, false);
             }
         }
 
     }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
-
 
     private enum SaveType {
         FILE, DIRECTORY, INVALID
