@@ -295,6 +295,8 @@ public class NewRandomizerGUI {
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
     private JComboBox tpComboBox;
+    private JCheckBox batchGenerationCheckBox;
+    private JSpinner batchQuantitySpinner;
 
     private static JFrame frame;
 
@@ -675,6 +677,13 @@ public class NewRandomizerGUI {
                 1
         );
 
+        SpinnerModel batchQuantityModel = new SpinnerNumberModel(
+                1,
+                1,
+                100,
+                1
+        );
+
         List<String> keys = new ArrayList<>(bundle.keySet());
         Collections.sort(keys);
         for (String k: keys) {
@@ -688,6 +697,7 @@ public class NewRandomizerGUI {
         tpImportantTrainersSpinner.setModel(importantTrainerModel);
         tpRegularTrainersSpinner.setModel(regularTrainerModel);
         tpEliteFourUniquePokemonSpinner.setModel(eliteFourUniquePokemonModel);
+        batchQuantitySpinner.setModel(batchQuantityModel);
 
         customNamesEditorMenuItem = new JMenuItem();
         customNamesEditorMenuItem.setText(bundle.getString("GUI.customNamesEditorMenuItem.text"));
@@ -1101,6 +1111,10 @@ public class NewRandomizerGUI {
             }
         }
 
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 
 

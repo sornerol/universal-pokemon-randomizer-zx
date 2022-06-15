@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.dabomstew.pkrandom.newgui.NewRandomizerGUI">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="7" y="20" width="1084" height="1103"/>
+      <xy x="7" y="20" width="1094" height="1103"/>
     </constraints>
     <properties/>
     <border type="none">
@@ -70,7 +70,7 @@
       </grid>
       <vspacer id="7ea6">
         <constraints>
-          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
       </vspacer>
@@ -124,7 +124,7 @@
       </grid>
       <tabbedpane id="d57f7" binding="tabbedPane1" default-binding="true">
         <constraints>
-          <grid row="8" column="1" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="9" column="1" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
           </grid>
           <gridbag weightx="0.5" weighty="0.1"/>
@@ -3645,7 +3645,7 @@
       </component>
       <component id="ca71c" class="javax.swing.JLabel" binding="websiteLinkLabel">
         <constraints>
-          <grid row="6" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="11" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -3654,7 +3654,7 @@
       </component>
       <component id="df6e7" class="javax.swing.JLabel" binding="versionLabel">
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -3682,7 +3682,7 @@
       </vspacer>
       <vspacer id="be7c1">
         <constraints>
-          <grid row="9" column="7" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="7" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
       </vspacer>
@@ -3738,13 +3738,13 @@
       </hspacer>
       <vspacer id="da2fa">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
       </vspacer>
       <component id="1c59e" class="javax.swing.JLabel" binding="wikiLinkLabel">
         <constraints>
-          <grid row="6" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="0" right="10" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -3752,6 +3752,46 @@
           <text resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" key="GUI.wikiLinkLabel.text"/>
         </properties>
       </component>
+      <grid id="11a6e" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="6" column="4" row-span="3" col-span="2" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.1" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none" title-resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" title-key="GUI.batchGenerationPanel.title">
+          <font style="1"/>
+        </border>
+        <children>
+          <component id="9c35c" class="javax.swing.JCheckBox" binding="batchGenerationCheckBox">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" key="GUI.batchGenerationCheckBox.text"/>
+              <toolTipText resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" key="GUI.batchGenerationCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="bd2db" class="javax.swing.JSpinner" binding="batchQuantitySpinner">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <maximumSize width="100" height="30"/>
+              <minimumSize width="100" height="30"/>
+              <preferredSize width="100" height="30"/>
+              <toolTipText resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" key="GUI.batchQuantitySpinner.toolTipText"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <vspacer id="5dfc4">
+        <constraints>
+          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </vspacer>
     </children>
   </grid>
   <buttonGroups>
