@@ -330,6 +330,7 @@ public class NewRandomizerGUI {
     private JMenuItem removeGameUpdateMenuItem;
     private JMenuItem loadGetSettingsMenuItem;
     private JMenuItem keepOrUnloadGameAfterRandomizingMenuItem;
+    private JMenuItem batchModeMenuItem;
 
     private ImageIcon emptyIcon = new ImageIcon(getClass().getResource("/com/dabomstew/pkrandom/newgui/emptyIcon.png"));
     private boolean haveCheckedCustomNames, unloadGameOnSuccess;
@@ -714,6 +715,10 @@ public class NewRandomizerGUI {
             keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.unloadGameAfterRandomizingMenuItem.text"));
         }
         settingsMenu.add(keepOrUnloadGameAfterRandomizingMenuItem);
+
+        batchModeMenuItem = new JMenuItem();
+        batchModeMenuItem.setText(bundle.getString("GUI.batchModeMenuItem.text"));
+        settingsMenu.add(batchModeMenuItem);
     }
 
     private void loadROM() {
