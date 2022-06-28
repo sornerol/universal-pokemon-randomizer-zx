@@ -27,7 +27,7 @@ package com.dabomstew.pkrandom;
 import java.io.*;
 import java.util.StringJoiner;
 
-public class BatchModeSettings {
+public class BatchModeSettings implements Cloneable {
     private Boolean batchModeEnabled;
     private Boolean generateLogFile;
     private Boolean autoAdvanceStartingIndex;
@@ -54,7 +54,7 @@ public class BatchModeSettings {
         this.batchModeEnabled = batchModeEnabled;
     }
 
-    public boolean isGenerateLogFile() {
+    public boolean shouldGenerateLogFile() {
         return generateLogFile;
     }
 
@@ -62,7 +62,7 @@ public class BatchModeSettings {
         this.generateLogFile = generateLogFile;
     }
 
-    public boolean isAutoAdvanceStartingIndex() {
+    public boolean shouldAutoAdvanceStartingIndex() {
         return autoAdvanceStartingIndex;
     }
 
@@ -111,11 +111,18 @@ public class BatchModeSettings {
         sj.add("batchmode.numberofseeds=" + numberOfSeeds.toString());
         sj.add("batchmode.startingindex=" + startingIndex.toString());
         sj.add("batchmode.filenameprefix=" + fileNamePrefix);
-        try {
-            sj.add("batchmode.outputdirectory=" + outputDirectory.getCanonicalPath());
-        } catch (IOException e) {
-            sj.add("batchmode.outputdirectory=" + outputDirectory.getAbsolutePath());
-        }
+        sj.add("batchmode.outputdirectory=" + outputDirectory.getAbsolutePath());
         return sj.toString();
+    }
+
+    @Override
+    public BatchModeSettings clone() {
+        try {
+            BatchModeSettings clone = (BatchModeSettings) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

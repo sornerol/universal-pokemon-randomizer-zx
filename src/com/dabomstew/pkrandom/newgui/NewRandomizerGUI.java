@@ -566,6 +566,7 @@ public class NewRandomizerGUI {
                 enableOrDisableSubControls();
             }
         });
+        batchModeMenuItem.addActionListener(e -> batchModeSettingsDialog());
     }
 
     private void showInitialPopup() {
@@ -1302,6 +1303,12 @@ public class NewRandomizerGUI {
         label.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         Object[] messages = {text,label};
         JOptionPane.showMessageDialog(frame, messages);
+    }
+
+    private void batchModeSettingsDialog() {
+        BatchModeSettingsDialog dlg = new BatchModeSettingsDialog(frame, batchModeSettings);
+        batchModeSettings = dlg.getCurrentSettings();
+        attemptWriteConfig();
     }
 
     // This is only intended to be used with the "Keep Game Loaded After Randomizing" setting; it assumes that
