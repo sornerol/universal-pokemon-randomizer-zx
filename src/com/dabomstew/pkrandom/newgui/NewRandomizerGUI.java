@@ -341,6 +341,8 @@ public class NewRandomizerGUI {
     private final int TRAINER_UNCHANGED = 0, TRAINER_RANDOM = 1, TRAINER_RANDOM_EVEN = 2, TRAINER_RANDOM_EVEN_MAIN = 3,
                         TRAINER_TYPE_THEMED = 4, TRAINER_TYPE_THEMED_ELITE4_GYMS = 5;
 
+    private BatchModeSettings batchModeSettings;
+
     public NewRandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
@@ -3737,6 +3739,7 @@ public class NewRandomizerGUI {
     private void attemptReadConfig() {
         // Things that should be true by default should be manually set here
         unloadGameOnSuccess = true;
+        batchModeSettings = new BatchModeSettings();
         File fh = new File(SysConstants.ROOT_PATH + "config.ini");
         if (!fh.exists() || !fh.canRead()) {
             return;
@@ -3776,6 +3779,27 @@ public class NewRandomizerGUI {
                         if (key.equals("showinvalidrompopup")) {
                             showInvalidRomPopup = Boolean.parseBoolean(tokens[1].trim());
                         }
+                        if (key.equals("batchmode.enabled")) {
+                            batchModeSettings.setBatchModeEnabled(Boolean.parseBoolean(tokens[1].trim()));
+                        }
+                        if (key.equals("batchmode.generatelogfiles")){
+                            batchModeSettings.setGenerateLogFile(Boolean.parseBoolean(tokens[1].trim()));
+                        }
+                        if (key.equals("batchmode.autoadvanceindex")){
+                            batchModeSettings.setAutoAdvanceStartingIndex(Boolean.parseBoolean(tokens[1].trim()));
+                        }
+                        if (key.equals("batchmode.numberofseeds")){
+                            batchModeSettings.setNumberOfSeeds(Integer.parseInt(tokens[1].trim()));
+                        }
+                        if (key.equals("batchmode.startingindex")){
+                            batchModeSettings.setStartingIndex(Integer.parseInt(tokens[1].trim()));
+                        }
+                        if (key.equals("batchmode.filenameprefix")){
+                            batchModeSettings.setFileNamePrefix(tokens[1].trim());
+                        }
+                        if (key.equals("batchmode.outputdirectory")){
+                            batchModeSettings.setOutputDirectory(new File(tokens[1].trim()));
+                        }
                     }
                 } else if (isReadingUpdates) {
                     isReadingUpdates = false;
@@ -3799,6 +3823,7 @@ public class NewRandomizerGUI {
             ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
             ps.println("showinvalidrompopup=" + showInvalidRomPopup);
+            ps.println(batchModeSettings.toString());
             if (!initialPopup) {
                 ps.println("firststart=" + Version.VERSION_STRING);
             }
