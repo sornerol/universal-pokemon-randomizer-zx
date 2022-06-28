@@ -3805,7 +3805,7 @@ public class NewRandomizerGUI {
                             batchModeSettings.setFileNamePrefix(tokens[1].trim());
                         }
                         if (key.equals("batchmode.outputdirectory")){
-                            batchModeSettings.setOutputDirectory(new File(tokens[1].trim()));
+                            batchModeSettings.setOutputDirectory(tokens[1].trim());
                         }
                     }
                 } else if (isReadingUpdates) {

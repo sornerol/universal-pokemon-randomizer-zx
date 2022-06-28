@@ -34,7 +34,7 @@ public class BatchModeSettings implements Cloneable {
     private Integer numberOfSeeds;
     private Integer startingIndex;
     private String fileNamePrefix;
-    private File outputDirectory;
+    private String outputDirectory;
 
     public BatchModeSettings() {
         batchModeEnabled = false;
@@ -43,7 +43,7 @@ public class BatchModeSettings implements Cloneable {
         numberOfSeeds = 10;
         startingIndex = 0;
         fileNamePrefix = "random";
-        outputDirectory = new File(SysConstants.ROOT_PATH);
+        outputDirectory = SysConstants.ROOT_PATH;
     }
 
     public boolean isBatchModeEnabled() {
@@ -94,11 +94,11 @@ public class BatchModeSettings implements Cloneable {
         this.fileNamePrefix = fileNamePrefix;
     }
 
-    public File getOutputDirectory() {
+    public String getOutputDirectory() {
         return outputDirectory;
     }
 
-    public void setOutputDirectory(File outputDirectory) {
+    public void setOutputDirectory(String outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
@@ -111,16 +111,14 @@ public class BatchModeSettings implements Cloneable {
         sj.add("batchmode.numberofseeds=" + numberOfSeeds.toString());
         sj.add("batchmode.startingindex=" + startingIndex.toString());
         sj.add("batchmode.filenameprefix=" + fileNamePrefix);
-        sj.add("batchmode.outputdirectory=" + outputDirectory.getAbsolutePath());
+        sj.add("batchmode.outputdirectory=" + outputDirectory);
         return sj.toString();
     }
 
     @Override
     public BatchModeSettings clone() {
         try {
-            BatchModeSettings clone = (BatchModeSettings) super.clone();
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
-            return clone;
+            return (BatchModeSettings) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
