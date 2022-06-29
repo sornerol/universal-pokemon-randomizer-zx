@@ -93,6 +93,7 @@ public class BatchModeSettingsDialog extends JDialog {
         fileNamePrefixTextField.setText(currentSettings.getFileNamePrefix());
         outputDirectoryLabel.setText(currentSettings.getOutputDirectory());
         outputDirectoryFileChooser.setCurrentDirectory(new File(currentSettings.getOutputDirectory()).getParentFile());
+        outputDirectoryFileChooser.setSelectedFile(new File(currentSettings.getOutputDirectory()));
         outputDirectoryFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         enableBatchModeCheckBox.addActionListener(a -> setControlsEnabled(enableBatchModeCheckBox.isSelected()));
     }
