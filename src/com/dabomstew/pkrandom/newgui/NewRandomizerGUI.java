@@ -1010,9 +1010,9 @@ public class NewRandomizerGUI {
 
         try {
             final AtomicInteger finishedCV = new AtomicInteger(0);
-            OperationDialog batchProgressDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
+            opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
             Thread t = new Thread(() -> {
-                SwingUtilities.invokeLater(() -> batchProgressDialog.setVisible(!batchMode));
+                SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchMode));
                 boolean succeededSave = false;
                 try {
                     romHandler.setLog(verboseLog);
@@ -1033,7 +1033,7 @@ public class NewRandomizerGUI {
                 }
                 if (succeededSave) {
                     SwingUtilities.invokeLater(() -> {
-                        batchProgressDialog.setVisible(false);
+                        opDialog.setVisible(false);
                         // Log?
                         verboseLog.close();
                         byte[] out = baos.toByteArray();
@@ -1099,7 +1099,7 @@ public class NewRandomizerGUI {
                     });
                 } else {
                     SwingUtilities.invokeLater(() -> {
-                        batchProgressDialog.setVisible(false);
+                        opDialog.setVisible(false);
                         romHandler = null;
                         initialState();
                     });
