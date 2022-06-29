@@ -855,16 +855,18 @@ public class NewRandomizerGUI {
         if (allowed && fh != null) {
             saveRandomizedRom(outputType, fh);
         } else if (allowed && batchModeSettings.isBatchModeEnabled()) {
+            int numberOfSeeds = batchModeSettings.getNumberOfSeeds();
             int startingIndex = batchModeSettings.getStartingIndex();
-            int endingIndex = startingIndex + batchModeSettings.getNumberOfSeeds();
-            opDialog = new OperationDialog("Randomizing ROMs...", frame, true);
+            int endingIndex = startingIndex + numberOfSeeds;
+            final String progressTemplate = bundle.getString("GUI.batchModeProgress");
+            OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfSeeds), frame, true);
             SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
                 int i;
 
                 @Override
                 protected Void doInBackground() {
                     frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                    SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
+                    SwingUtilities.invokeLater(() -> batchProgressDialog.setVisible(true));
                     for (i = startingIndex; i < endingIndex; i++) {
                         String fileName = batchModeSettings.getOutputDirectory() +
                                 File.separator +
@@ -879,7 +881,11 @@ public class NewRandomizerGUI {
                         }
                         int currentRomNumber = i - startingIndex + 1;
 
-                        SwingUtilities.invokeLater(() -> opDialog.setLoadingLabelText("Saving " + currentRomNumber + " of " + batchModeSettings.getNumberOfSeeds()));
+                        SwingUtilities.invokeLater(
+                                () -> batchProgressDialog.setLoadingLabelText(String.format(progressTemplate,
+                                        currentRomNumber,
+                                        numberOfSeeds))
+                        );
                         saveRandomizedRom(outputType, rom);
                     }
                     return null;
@@ -892,13 +898,13 @@ public class NewRandomizerGUI {
                         batchModeSettings.setStartingIndex(i);
                         attemptWriteConfig();
                     }
-                    SwingUtilities.invokeLater(() -> opDialog.setVisible(false));
+                    SwingUtilities.invokeLater(() -> batchProgressDialog.setVisible(false));
                     JOptionPane.showMessageDialog(frame, bundle.getString("GUI.randomizationDone"));
                     if (unloadGameOnSuccess) {
                         romHandler = null;
                         initialState();
                     } else {
-                        reinitializeRomHandler(true);
+                        reinitializeRomHandler(false);
                     }
                     frame.setCursor(null);
                 }
@@ -1069,7 +1075,7 @@ public class NewRandomizerGUI {
                                 romHandler = null;
                                 initialState();
                             } else {
-                                reinitializeRomHandler(true);
+                                reinitializeRomHandler(false);
                             }
                         } else if (!batchMode) {
                             // Compile a config string
@@ -1087,7 +1093,7 @@ public class NewRandomizerGUI {
                                 romHandler = null;
                                 initialState();
                             } else {
-                                reinitializeRomHandler(true);
+                                reinitializeRomHandler(false);
                             }
                         }
                     });
@@ -1102,7 +1108,7 @@ public class NewRandomizerGUI {
             t.start();
             if (batchMode) {
                 t.join();
-                reinitializeRomHandler(false);
+                reinitializeRomHandler(true);
             }
         } catch (Exception ex) {
             attemptToLogException(ex, "GUI.saveFailed", "GUI.saveFailedNoLog", settings.toString(), Long.toString(seed));
@@ -1391,14 +1397,14 @@ public class NewRandomizerGUI {
     // This is only intended to be used with the "Keep Game Loaded After Randomizing" setting; it assumes that
     // the game has already been loaded once, and we just need to reload the same game to reinitialize the
     // RomHandler. Don't use this for other purposes unless you know what you're doing.
-    private void reinitializeRomHandler(boolean showLoadingDialog) {
+    private void reinitializeRomHandler(boolean batchMode) {
         String currentFN = this.romHandler.loadedFilename();
         for (RomHandler.Factory rhf : checkHandlers) {
             if (rhf.isLoadable(currentFN)) {
                 this.romHandler = rhf.create(RandomSource.instance());
                 opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
                 Thread t = new Thread(() -> {
-                    SwingUtilities.invokeLater(() -> opDialog.setVisible(showLoadingDialog));
+                    SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchMode));
                     try {
                         this.romHandler.loadRom(currentFN);
                         if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
@@ -1412,7 +1418,7 @@ public class NewRandomizerGUI {
                     });
                 });
                 t.start();
-                if (batchModeSettings.isBatchModeEnabled()) {
+                if (batchMode) {
                     try {
                         t.join();
                     } catch(InterruptedException ex) {
