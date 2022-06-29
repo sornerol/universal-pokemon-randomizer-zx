@@ -135,7 +135,7 @@ public class BatchModeSettingsDialog extends JDialog {
 
     private void updateSettings() {
         currentSettings.setBatchModeEnabled(enableBatchModeCheckBox.isSelected());
-        currentSettings.setGenerateLogFile(enableBatchModeCheckBox.isSelected());
+        currentSettings.setGenerateLogFile(generateLogFilesCheckBox.isSelected());
         currentSettings.setAutoAdvanceStartingIndex(autoAdvanceIndexCheckBox.isSelected());
         currentSettings.setNumberOfSeeds((Integer) numberOfSeedsSpinner.getValue());
         currentSettings.setStartingIndex((Integer) startingIndexSpinner.getValue());
