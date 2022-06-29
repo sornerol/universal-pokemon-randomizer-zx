@@ -857,27 +857,46 @@ public class NewRandomizerGUI {
         } else if (allowed && batchModeSettings.isBatchModeEnabled()) {
             int startingIndex = batchModeSettings.getStartingIndex();
             int endingIndex = startingIndex + batchModeSettings.getNumberOfSeeds();
-            for (int i = startingIndex; i < endingIndex; i++) {
-                String fileName = batchModeSettings.getOutputDirectory() +
-                        File.separator +
-                        batchModeSettings.getFileNamePrefix() +
-                        i;
-                if (outputType == SaveType.FILE) {
-                    fileName += '.' + romHandler.getDefaultExtension();
+            ProgressMonitor progressMonitor = new ProgressMonitor(frame,
+                    "Randomizing ROMs...",
+                    "0 of " + batchModeSettings.getNumberOfSeeds(),
+                    0,
+                    batchModeSettings.getNumberOfSeeds());
+            progressMonitor.setMillisToPopup(1);
+
+            Thread t = new Thread(() -> {
+                boolean canceled = false;
+                int i;
+                for (i = startingIndex; i < endingIndex; i++) {
+                    if(progressMonitor.isCanceled()) {
+                        canceled = true;
+                        break;
+                    }
+                    String fileName = batchModeSettings.getOutputDirectory() +
+                            File.separator +
+                            batchModeSettings.getFileNamePrefix() +
+                            i;
+                    if (outputType == SaveType.FILE) {
+                        fileName += '.' + romHandler.getDefaultExtension();
+                    }
+                    File rom = new File(fileName);
+                    if (outputType == SaveType.DIRECTORY) {
+                        rom.mkdirs();
+                    }
+                    int currentRomNumber = i - startingIndex + 1;
+                    progressMonitor.setProgress(currentRomNumber);
+                    progressMonitor.setNote(currentRomNumber + " of " + batchModeSettings.getNumberOfSeeds());
+                    saveRandomizedRom(outputType, rom);
                 }
-                File rom = new File(fileName);
-                if (outputType == SaveType.DIRECTORY) {
-                    rom.mkdirs();
+                if (batchModeSettings.shouldAutoAdvanceStartingIndex()) {
+                    batchModeSettings.setStartingIndex(i);
+                    attemptWriteConfig();
                 }
-                int currentRomNumber = i - startingIndex + 1;
-                saveRandomizedRom(outputType, rom);
-            }
-            if (batchModeSettings.shouldAutoAdvanceStartingIndex()) {
-                batchModeSettings.setStartingIndex(endingIndex);
-                attemptWriteConfig();
-            }
-            JOptionPane.showMessageDialog(frame,
-                    bundle.getString("GUI.randomizationDone"));
+                progressMonitor.close();
+                String message = canceled ? bundle.getString("GUI.randomizationCanceled") : bundle.getString("GUI.randomizationDone");
+                JOptionPane.showMessageDialog(frame, message);
+            });
+            t.start();
         }
     }
 

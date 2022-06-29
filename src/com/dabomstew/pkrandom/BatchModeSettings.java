@@ -24,7 +24,6 @@ package com.dabomstew.pkrandom;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import java.io.*;
 import java.util.StringJoiner;
 
 public class BatchModeSettings implements Cloneable {
@@ -39,7 +38,7 @@ public class BatchModeSettings implements Cloneable {
     public BatchModeSettings() {
         batchModeEnabled = false;
         generateLogFile = false;
-        autoAdvanceStartingIndex = false;
+        autoAdvanceStartingIndex = true;
         numberOfSeeds = 10;
         startingIndex = 0;
         fileNamePrefix = "random";
