@@ -12,7 +12,7 @@
     <children>
       <grid id="94766" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="1" row-span="1" col-span="3" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -57,7 +57,7 @@
       </hspacer>
       <hspacer id="57384">
         <constraints>
-          <grid row="0" column="3" row-span="8" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="4" row-span="8" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
       </hspacer>
@@ -72,13 +72,17 @@
       </component>
       <component id="c81ca" class="javax.swing.JTextField" binding="fileNamePrefixTextField">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <margin top="2" left="6" bottom="2" right="6"/>
+          <maximumSize width="160" height="30"/>
+          <minimumSize width="160" height="30"/>
+          <preferredSize width="160" height="30"/>
+          <toolTipText value="File name prefix for the generated ROMs."/>
         </properties>
       </component>
       <component id="a4367" class="javax.swing.JLabel">
@@ -101,26 +105,31 @@
       </component>
       <component id="3ee4c" class="javax.swing.JSpinner" binding="startingIndexSpinner">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Starting index for the first generated ROM."/>
+        </properties>
       </component>
       <component id="76f06" class="javax.swing.JSpinner" binding="numberOfSeedsSpinner">
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <toolTipText value="Number of ROMs to generate in a single batch."/>
+        </properties>
       </component>
       <component id="f8d94" class="javax.swing.JCheckBox" binding="enableBatchModeCheckBox">
         <constraints>
-          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <alignmentY value="0.5"/>
           <text value="Enable batch mode"/>
+          <toolTipText value="If selected, generate the number of seeds specified."/>
         </properties>
       </component>
       <component id="33deb" class="javax.swing.JButton" binding="chooseDirectoryButton">
@@ -136,11 +145,12 @@
           <minimumSize width="165" height="30"/>
           <preferredSize width="165" height="30"/>
           <text value="Output directory..."/>
+          <toolTipText value="Choose the output directory for your randomized ROMs."/>
         </properties>
       </component>
       <component id="52169" class="javax.swing.JLabel" binding="outputDirectoryLabel">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -152,22 +162,30 @@
       </component>
       <component id="2d8de" class="javax.swing.JCheckBox" binding="generateLogFilesCheckBox">
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Generate log files"/>
+          <toolTipText value="If selected, save logs for the randomized ROMs."/>
         </properties>
       </component>
       <component id="ebf20" class="javax.swing.JCheckBox" binding="autoAdvanceIndexCheckBox">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Automatically advance index"/>
+          <toolTipText value="If selected, the starting index will be automatically updated to the next index after a batch is ran."/>
         </properties>
       </component>
+      <hspacer id="ff006">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
     </children>
   </grid>
 </form>
