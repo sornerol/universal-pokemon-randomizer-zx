@@ -863,8 +863,8 @@ public class NewRandomizerGUI {
                     0,
                     batchModeSettings.getNumberOfSeeds());
             progressMonitor.setMillisToPopup(1);
-
             Thread t = new Thread(() -> {
+                frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 boolean canceled = false;
                 int i;
                 for (i = startingIndex; i < endingIndex; i++) {
@@ -895,6 +895,13 @@ public class NewRandomizerGUI {
                 progressMonitor.close();
                 String message = canceled ? bundle.getString("GUI.randomizationCanceled") : bundle.getString("GUI.randomizationDone");
                 JOptionPane.showMessageDialog(frame, message);
+                if (unloadGameOnSuccess) {
+                    romHandler = null;
+                    initialState();
+                } else {
+                    reinitializeRomHandler();
+                }
+                frame.setCursor(null);
             });
             t.start();
         }
@@ -1037,7 +1044,7 @@ public class NewRandomizerGUI {
                                         bundle.getString("GUI.logSaveFailed"));
                                 return;
                             }
-                        } else {
+                        } else if (!batchMode) {
                             int response = JOptionPane.showConfirmDialog(frame,
                                     bundle.getString("GUI.saveLogDialog.text"),
                                     bundle.getString("GUI.saveLogDialog.title"),
@@ -1076,7 +1083,7 @@ public class NewRandomizerGUI {
                             }
 
                             // Done
-                            if (this.unloadGameOnSuccess && !batchMode) {
+                            if (this.unloadGameOnSuccess) {
                                 romHandler = null;
                                 initialState();
                             } else {
@@ -1095,6 +1102,7 @@ public class NewRandomizerGUI {
             t.start();
             if (batchMode) {
                 t.join();
+                reinitializeRomHandler();
             }
         } catch (Exception ex) {
             attemptToLogException(ex, "GUI.saveFailed", "GUI.saveFailedNoLog", settings.toString(), Long.toString(seed));
@@ -1404,7 +1412,11 @@ public class NewRandomizerGUI {
                     });
                 });
                 t.start();
-
+                if (batchModeSettings.isBatchModeEnabled()) {
+                    try {
+                        t.join();
+                    } catch(InterruptedException ignored) {}
+                }
                 return;
             }
         }
