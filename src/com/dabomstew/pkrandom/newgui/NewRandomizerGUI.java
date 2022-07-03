@@ -1394,9 +1394,10 @@ public class NewRandomizerGUI {
         attemptWriteConfig();
     }
 
-    // This is only intended to be used with the "Keep Game Loaded After Randomizing" setting; it assumes that
-    // the game has already been loaded once, and we just need to reload the same game to reinitialize the
-    // RomHandler. Don't use this for other purposes unless you know what you're doing.
+    // This is only intended to be used with the "Keep Game Loaded After Randomizing" setting or between randomization
+    // iterations when batch mode is enabled. It assumes that the game has already been loaded once, and we just need
+    // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
+    // you're doing.
     private void reinitializeRomHandler(boolean batchMode) {
         String currentFN = this.romHandler.loadedFilename();
         for (RomHandler.Factory rhf : checkHandlers) {
