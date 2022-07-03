@@ -822,7 +822,7 @@ public class NewRandomizerGUI {
         romSaveChooser.setSelectedFile(null);
         boolean allowed = false;
         File fh = null;
-        if (batchModeSettings.isBatchModeEnabled()) {
+        if (batchModeSettings.isBatchModeEnabled() && outputType != SaveType.INVALID) {
             allowed = true;
         }
         else if (outputType == SaveType.FILE) {
