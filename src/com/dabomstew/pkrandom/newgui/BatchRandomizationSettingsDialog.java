@@ -32,7 +32,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 
-public class BatchModeSettingsDialog extends JDialog {
+public class BatchRandomizationSettingsDialog extends JDialog {
     private JPanel mainPanel;
     private JButton okButton;
     private JButton cancelButton;
@@ -53,10 +53,11 @@ public class BatchModeSettingsDialog extends JDialog {
         return this.currentSettings;
     }
 
-    public BatchModeSettingsDialog(JFrame parent, BatchModeSettings currentSettings) {
+    public BatchRandomizationSettingsDialog(JFrame parent, BatchModeSettings currentSettings) {
         super(parent, true);
         add(mainPanel);
-        setTitle("Batch Mode Settings");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/newgui/Bundle");
+        setTitle(bundle.getString("BatchRandomizationSettingsDialog.title"));
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         getRootPane().setDefaultButton(okButton);

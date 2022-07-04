@@ -1389,7 +1389,7 @@ public class NewRandomizerGUI {
     }
 
     private void batchModeSettingsDialog() {
-        BatchModeSettingsDialog dlg = new BatchModeSettingsDialog(frame, batchModeSettings);
+        BatchRandomizationSettingsDialog dlg = new BatchRandomizationSettingsDialog(frame, batchModeSettings);
         batchModeSettings = dlg.getCurrentSettings();
         attemptWriteConfig();
     }
