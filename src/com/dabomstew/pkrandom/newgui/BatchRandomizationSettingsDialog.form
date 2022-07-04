@@ -112,7 +112,7 @@
           <toolTipText resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" key="BatchRandomizationSettingsDialog.startingIndexSpinner.toolTipText"/>
         </properties>
       </component>
-      <component id="76f06" class="javax.swing.JSpinner" binding="numberOfSeedsSpinner">
+      <component id="76f06" class="javax.swing.JSpinner" binding="numberOfRandomizedROMsSpinner">
         <constraints>
           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
@@ -121,7 +121,7 @@
           <toolTipText resource-bundle="com/dabomstew/pkrandom/newgui/Bundle" key="BatchRandomizationSettingsDialog.numberOfRandomizedROMsSpinner.toolTipText"/>
         </properties>
       </component>
-      <component id="f8d94" class="javax.swing.JCheckBox" binding="enableBatchModeCheckBox">
+      <component id="f8d94" class="javax.swing.JCheckBox" binding="enableBatchRandomizationCheckBox">
         <constraints>
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>

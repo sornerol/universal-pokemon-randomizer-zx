@@ -1,9 +1,8 @@
 package com.dabomstew.pkrandom.newgui;
 
 /*----------------------------------------------------------------------------*/
-/*--  BatchModeSettingsDialog.java - a dialog for configuring batch mode    --*/
-/*--                                 settings (allows for making multiple   --*/
-/*--                                 randomized ROMs)                       --*/
+/*--  BatchRandomizationSettingsDialog.java - a dialog for configuring      --*/
+/*--                                          batch randomization settings  --*/
 /*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
@@ -26,7 +25,7 @@ package com.dabomstew.pkrandom.newgui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.dabomstew.pkrandom.BatchModeSettings;
+import com.dabomstew.pkrandom.BatchRandomizationSettings;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -36,8 +35,8 @@ public class BatchRandomizationSettingsDialog extends JDialog {
     private JPanel mainPanel;
     private JButton okButton;
     private JButton cancelButton;
-    private JCheckBox enableBatchModeCheckBox;
-    private JSpinner numberOfSeedsSpinner;
+    private JCheckBox enableBatchRandomizationCheckBox;
+    private JSpinner numberOfRandomizedROMsSpinner;
     private JSpinner startingIndexSpinner;
     private JTextField fileNamePrefixTextField;
     private JCheckBox generateLogFilesCheckBox;
@@ -47,13 +46,13 @@ public class BatchRandomizationSettingsDialog extends JDialog {
 
     private JFileChooser outputDirectoryFileChooser;
 
-    private final BatchModeSettings currentSettings;
+    private final BatchRandomizationSettings currentSettings;
 
-    public BatchModeSettings getCurrentSettings() {
+    public BatchRandomizationSettings getCurrentSettings() {
         return this.currentSettings;
     }
 
-    public BatchRandomizationSettingsDialog(JFrame parent, BatchModeSettings currentSettings) {
+    public BatchRandomizationSettingsDialog(JFrame parent, BatchRandomizationSettings currentSettings) {
         super(parent, true);
         add(mainPanel);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/dabomstew/pkrandom/newgui/Bundle");
@@ -94,8 +93,8 @@ public class BatchRandomizationSettingsDialog extends JDialog {
         mainPanel.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        SpinnerNumberModel numberOfSeedsModel = new SpinnerNumberModel(1,1, Integer.MAX_VALUE, 1);
-        numberOfSeedsSpinner.setModel(numberOfSeedsModel);
+        SpinnerNumberModel numberOfRandomizedROMsModel = new SpinnerNumberModel(1,1, Integer.MAX_VALUE, 1);
+        numberOfRandomizedROMsSpinner.setModel(numberOfRandomizedROMsModel);
 
         SpinnerNumberModel startingIndexModel = new SpinnerNumberModel(1,0, Integer.MAX_VALUE, 1);
         startingIndexSpinner.setModel(startingIndexModel);
@@ -108,25 +107,25 @@ public class BatchRandomizationSettingsDialog extends JDialog {
             }
         });
         setInitialControlValues();
-        setControlsEnabled(currentSettings.isBatchModeEnabled());
+        setControlsEnabled(currentSettings.getBatchRandomizationEnabled());
     }
 
     private void setInitialControlValues() {
-        enableBatchModeCheckBox.setSelected(currentSettings.isBatchModeEnabled());
+        enableBatchRandomizationCheckBox.setSelected(currentSettings.getBatchRandomizationEnabled());
         generateLogFilesCheckBox.setSelected(currentSettings.shouldGenerateLogFile());
         autoAdvanceIndexCheckBox.setSelected(currentSettings.shouldAutoAdvanceStartingIndex());
-        numberOfSeedsSpinner.setValue(currentSettings.getNumberOfSeeds());
+        numberOfRandomizedROMsSpinner.setValue(currentSettings.getNumberOfRandomizedROMs());
         startingIndexSpinner.setValue(currentSettings.getStartingIndex());
         fileNamePrefixTextField.setText(currentSettings.getFileNamePrefix());
         outputDirectoryLabel.setText(currentSettings.getOutputDirectory());
         outputDirectoryFileChooser.setCurrentDirectory(new File(currentSettings.getOutputDirectory()).getParentFile());
         outputDirectoryFileChooser.setSelectedFile(new File(currentSettings.getOutputDirectory()));
         outputDirectoryFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        enableBatchModeCheckBox.addActionListener(a -> setControlsEnabled(enableBatchModeCheckBox.isSelected()));
+        enableBatchRandomizationCheckBox.addActionListener(a -> setControlsEnabled(enableBatchRandomizationCheckBox.isSelected()));
     }
 
     private void setControlsEnabled(boolean enabled) {
-        numberOfSeedsSpinner.setEnabled(enabled);
+        numberOfRandomizedROMsSpinner.setEnabled(enabled);
         startingIndexSpinner.setEnabled(enabled);
         fileNamePrefixTextField.setEnabled(enabled);
         generateLogFilesCheckBox.setEnabled(enabled);
@@ -135,10 +134,10 @@ public class BatchRandomizationSettingsDialog extends JDialog {
     }
 
     private void updateSettings() {
-        currentSettings.setBatchModeEnabled(enableBatchModeCheckBox.isSelected());
+        currentSettings.setBatchRandomizationEnabled(enableBatchRandomizationCheckBox.isSelected());
         currentSettings.setGenerateLogFile(generateLogFilesCheckBox.isSelected());
         currentSettings.setAutoAdvanceStartingIndex(autoAdvanceIndexCheckBox.isSelected());
-        currentSettings.setNumberOfSeeds((Integer) numberOfSeedsSpinner.getValue());
+        currentSettings.setNumberOfRandomizedROMs((Integer) numberOfRandomizedROMsSpinner.getValue());
         currentSettings.setStartingIndex((Integer) startingIndexSpinner.getValue());
         currentSettings.setFileNamePrefix(fileNamePrefixTextField.getText());
         currentSettings.setOutputDirectory(outputDirectoryFileChooser.getSelectedFile().getAbsolutePath());

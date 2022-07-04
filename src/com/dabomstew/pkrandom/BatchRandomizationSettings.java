@@ -1,7 +1,8 @@
 package com.dabomstew.pkrandom;
 
 /*----------------------------------------------------------------------------*/
-/*--  BatchModeSettings.java - handles functionality related to batch mode. --*/
+/*--  BatchRandomizationSettings.java - handles functionality related to    --*/
+/*--                                    batch randomization.                --*/
 /*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
@@ -26,31 +27,31 @@ package com.dabomstew.pkrandom;
 
 import java.util.StringJoiner;
 
-public class BatchModeSettings implements Cloneable {
-    private Boolean batchModeEnabled;
+public class BatchRandomizationSettings implements Cloneable {
+    private Boolean batchRandomizationEnabled;
     private Boolean generateLogFile;
     private Boolean autoAdvanceStartingIndex;
-    private Integer numberOfSeeds;
+    private Integer numberOfRandomizedROMs;
     private Integer startingIndex;
     private String fileNamePrefix;
     private String outputDirectory;
 
-    public BatchModeSettings() {
-        batchModeEnabled = false;
+    public BatchRandomizationSettings() {
+        batchRandomizationEnabled = false;
         generateLogFile = false;
         autoAdvanceStartingIndex = true;
-        numberOfSeeds = 10;
+        numberOfRandomizedROMs = 10;
         startingIndex = 0;
         fileNamePrefix = "random";
         outputDirectory = SysConstants.ROOT_PATH;
     }
 
-    public boolean isBatchModeEnabled() {
-        return batchModeEnabled;
+    public boolean getBatchRandomizationEnabled() {
+        return batchRandomizationEnabled;
     }
 
-    public void setBatchModeEnabled(boolean batchModeEnabled) {
-        this.batchModeEnabled = batchModeEnabled;
+    public void setBatchRandomizationEnabled(boolean batchRandomizationEnabled) {
+        this.batchRandomizationEnabled = batchRandomizationEnabled;
     }
 
     public boolean shouldGenerateLogFile() {
@@ -69,12 +70,12 @@ public class BatchModeSettings implements Cloneable {
         this.autoAdvanceStartingIndex = autoAdvanceStartingIndex;
     }
 
-    public int getNumberOfSeeds() {
-        return numberOfSeeds;
+    public int getNumberOfRandomizedROMs() {
+        return numberOfRandomizedROMs;
     }
 
-    public void setNumberOfSeeds(int numberOfSeeds) {
-        this.numberOfSeeds = numberOfSeeds;
+    public void setNumberOfRandomizedROMs(int numberOfRandomizedROMs) {
+        this.numberOfRandomizedROMs = numberOfRandomizedROMs;
     }
 
     public int getStartingIndex() {
@@ -104,20 +105,20 @@ public class BatchModeSettings implements Cloneable {
     @Override
     public String toString() {
         StringJoiner sj = new StringJoiner("\n");
-        sj.add("batchmode.enabled=" + batchModeEnabled.toString());
-        sj.add("batchmode.generatelogfiles=" + generateLogFile.toString());
-        sj.add("batchmode.autoadvanceindex=" + autoAdvanceStartingIndex.toString());
-        sj.add("batchmode.numberofseeds=" + numberOfSeeds.toString());
-        sj.add("batchmode.startingindex=" + startingIndex.toString());
-        sj.add("batchmode.filenameprefix=" + fileNamePrefix);
-        sj.add("batchmode.outputdirectory=" + outputDirectory);
+        sj.add("batchrandomization.enabled=" + batchRandomizationEnabled.toString());
+        sj.add("batchrandomization.generatelogfiles=" + generateLogFile.toString());
+        sj.add("batchrandomization.autoadvanceindex=" + autoAdvanceStartingIndex.toString());
+        sj.add("batchrandomization.numberofrandomizedroms=" + numberOfRandomizedROMs.toString());
+        sj.add("batchrandomization.startingindex=" + startingIndex.toString());
+        sj.add("batchrandomization.filenameprefix=" + fileNamePrefix);
+        sj.add("batchrandomization.outputdirectory=" + outputDirectory);
         return sj.toString();
     }
 
     @Override
-    public BatchModeSettings clone() {
+    public BatchRandomizationSettings clone() {
         try {
-            return (BatchModeSettings) super.clone();
+            return (BatchRandomizationSettings) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
