@@ -805,7 +805,7 @@ public class NewRandomizerGUI {
         if (romHandler == null) {
             return; // none loaded
         }
-        if (raceModeCheckBox.isSelected() && batchRandomizationSettings.getBatchRandomizationEnabled()) {
+        if (raceModeCheckBox.isSelected() && batchRandomizationSettings.isBatchRandomizationEnabled()) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.batchRandomizationRequirements"));
             return;
         }
@@ -822,7 +822,7 @@ public class NewRandomizerGUI {
         romSaveChooser.setSelectedFile(null);
         boolean allowed = false;
         File fh = null;
-        if (batchRandomizationSettings.getBatchRandomizationEnabled() && outputType != SaveType.INVALID) {
+        if (batchRandomizationSettings.isBatchRandomizationEnabled() && outputType != SaveType.INVALID) {
             allowed = true;
         }
         else if (outputType == SaveType.FILE) {
@@ -854,13 +854,13 @@ public class NewRandomizerGUI {
 
         if (allowed && fh != null) {
             saveRandomizedRom(outputType, fh);
-        } else if (allowed && batchRandomizationSettings.getBatchRandomizationEnabled()) {
+        } else if (allowed && batchRandomizationSettings.isBatchRandomizationEnabled()) {
             int numberOfRandomizedROMs = batchRandomizationSettings.getNumberOfRandomizedROMs();
             int startingIndex = batchRandomizationSettings.getStartingIndex();
             int endingIndex = startingIndex + numberOfRandomizedROMs;
             final String progressTemplate = bundle.getString("GUI.batchRandomizationProgress");
             OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfRandomizedROMs), frame, true);
-            SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+            SwingWorker swingWorker = new SwingWorker<Void, Void>() {
                 int i;
 
                 @Override
@@ -996,7 +996,7 @@ public class NewRandomizerGUI {
     private void performRandomization(final String filename, final long seed, CustomNamesSet customNames, boolean saveAsDirectory) {
         final Settings settings = createSettingsFromState(customNames);
         final boolean raceMode = settings.isRaceMode();
-        final boolean batchRandomization = batchRandomizationSettings.getBatchRandomizationEnabled() && !presetMode;
+        final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
         // Setup verbose log
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream log;

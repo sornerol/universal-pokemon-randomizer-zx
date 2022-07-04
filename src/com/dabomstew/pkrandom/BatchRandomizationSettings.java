@@ -46,7 +46,7 @@ public class BatchRandomizationSettings implements Cloneable {
         outputDirectory = SysConstants.ROOT_PATH;
     }
 
-    public boolean getBatchRandomizationEnabled() {
+    public boolean isBatchRandomizationEnabled() {
         return batchRandomizationEnabled;
     }
 
