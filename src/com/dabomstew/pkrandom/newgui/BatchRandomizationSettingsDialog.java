@@ -118,7 +118,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
         startingIndexSpinner.setValue(currentSettings.getStartingIndex());
         fileNamePrefixTextField.setText(currentSettings.getFileNamePrefix());
         outputDirectoryLabel.setText(currentSettings.getOutputDirectory());
-        outputDirectoryFileChooser.setCurrentDirectory(new File(currentSettings.getOutputDirectory()).getParentFile());
+        outputDirectoryFileChooser.setCurrentDirectory(new File(currentSettings.getOutputDirectory()));
         outputDirectoryFileChooser.setSelectedFile(new File(currentSettings.getOutputDirectory()));
         outputDirectoryFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         enableBatchRandomizationCheckBox.addActionListener(a -> setControlsEnabled(enableBatchRandomizationCheckBox.isSelected()));
