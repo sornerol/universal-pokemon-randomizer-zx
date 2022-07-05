@@ -102,7 +102,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
         chooseDirectoryButton.addActionListener(e -> {
             int selectionResult = outputDirectoryFileChooser.showDialog(this, "Select");
             if (selectionResult == JFileChooser.APPROVE_OPTION) {
-                outputDirectoryFileChooser.setCurrentDirectory(new File(currentSettings.getOutputDirectory()));
+                outputDirectoryFileChooser.setCurrentDirectory(outputDirectoryFileChooser.getSelectedFile());
                 outputDirectoryLabel.setText(outputDirectoryFileChooser.getSelectedFile().getAbsolutePath());
             }
         });
